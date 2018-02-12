@@ -13,10 +13,10 @@ public class TerrainScript : MonoBehaviour
     public Dictionary<TerrainExtensions.Direction, GameObject> Neighbors = new Dictionary<TerrainExtensions.Direction, GameObject>();
     void Start()
     {
+        // Box collider to set triggers
         terrain = GetComponent<Terrain>();
         terrainData = terrain.terrainData;
         terrainSettings = GameMaster.gameMaster.terrainSettings;
-
         gameObject.AddComponent<BoxCollider>();
         coll = GetComponent<BoxCollider>();
         coll.isTrigger = true;
@@ -29,6 +29,7 @@ public class TerrainScript : MonoBehaviour
         {
             tracker = GameMaster.gameMaster.TrackerObject;
         }
+        // Track and measure distance from edges
         if (transform.childCount >= 1)
         {
             if (tracker.transform.localPosition.x >= terrainSettings.MapSize.x - terrainSettings.EdgeDistance)
@@ -96,6 +97,7 @@ public class TerrainScript : MonoBehaviour
             }
         }
     }
+    // Track Player position
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.tag == "Player")

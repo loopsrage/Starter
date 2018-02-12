@@ -4,7 +4,6 @@ using System.Collections;
 public class GameMaster : MonoBehaviour
 {
     public static GameMaster gameMaster;
-    public TestMoveStructure testMoveStructure;
     public TerrainSettings terrainSettings;
     public ScriptableParticle ParticleSystemSelector;
     public Vector3 PlayerPosition;
@@ -14,9 +13,7 @@ public class GameMaster : MonoBehaviour
     // Use this for initialization
     void Awake()
     {
-        testMoveStructure = ScriptableObject.CreateInstance<TestMoveStructure>();
         terrainSettings = ScriptableObject.CreateInstance<TerrainSettings>();
-        testMoveStructure = ScriptableObject.CreateInstance<TestMoveStructure>();
         ParticleSystemSelector = ScriptableObject.CreateInstance<ScriptableParticle>();
         terrainBiome = ScriptableObject.CreateInstance<TerrainBiome>();
         terrainManager = ScriptableObject.CreateInstance<TerrainManager>();

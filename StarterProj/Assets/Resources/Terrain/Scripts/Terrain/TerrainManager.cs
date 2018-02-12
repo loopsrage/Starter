@@ -11,6 +11,7 @@ public class TerrainManager : ScriptableObject
 }
 public class TerrainSettings : ScriptableObject
 {
+    // Base Settings for Terrain
     public int HeightMapResolution = 512;
     public Vector3 MapSize = new Vector3(512f,20f, 512f);
     public float EdgeDistance = 512;

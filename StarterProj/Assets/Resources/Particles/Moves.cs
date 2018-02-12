@@ -18,6 +18,7 @@ public class Moves : MonoBehaviour
 }
 public static class MoveData
 {
+    // Store Move Information Here
     public enum MoveTypes
     {
         Fire,
