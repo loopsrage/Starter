@@ -411,7 +411,7 @@ public static class TerrainExtensions
                     for (int z = 1; z < Res - 1; z++)
                     {
                         float CurrentHeight = Heights[x, z];
-                        if (CurrentHeight <= 0.1f)
+                        if (CurrentHeight <= 0.5f)
                         {
                             Heights[x, z] -= Mathf.PerlinNoise(Heights[x, z] + x / RandomNoise, Heights[x, z] + z / RandomNoise) / 40;
                         }
