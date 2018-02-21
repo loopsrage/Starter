@@ -177,7 +177,7 @@ public static class TerrainExtensions
         {
             FirstTerrain = false;
         }
-        int EithRes = res / 54;
+        int EithRes = res / 24;
         int NegRes = res - EithRes;
         for (int x = 0; x <= terrainData.heightmapResolution - 1; x++)
         {
@@ -185,7 +185,7 @@ public static class TerrainExtensions
             {
                 if (FirstTerrain)
                 {
-                    NewHeights[x, z] = Mathf.PerlinNoise(x / RandomNoise , z / RandomNoise) / 4;
+                    NewHeights[x, z] = Mathf.DeltaAngle(Mathf.PerlinNoise(x / RandomNoise, z / RandomNoise), 1f);
                 }
                 else
                 {
@@ -200,6 +200,7 @@ public static class TerrainExtensions
                             NewHeights[x, z] = Mathf.PerlinNoise(x / RandomNoise, z / RandomNoise) / 2;
                             float Height2 = NewHeights[x, z];
                             float Height3 = 0f;
+                            float PreviousHeights = NewHeights[x - 1, z];
                             if (x < EithRes || z > NegRes)
                             {
                                 Height3 = Mathf.SmoothStep(NewHeights[x - 1, z], Height2, 0.00001f);
@@ -210,7 +211,7 @@ public static class TerrainExtensions
                             }
                             else
                             {
-                                Height3 = Mathf.MoveTowards(UpHeights[res - x + 1, z], Height2, 0.00001f);
+                                Height3 = Mathf.MoveTowards(UpHeights[res - x, z], Mathf.DeltaAngle(Mathf.PerlinNoise(x / 100f, z / 100f) / 100f, PreviousHeights), 0.0005f);
                             }
                             NewHeights[x, z] = Height3; // Good
                         }
@@ -221,22 +222,23 @@ public static class TerrainExtensions
                         NewHeights[res, z] = Height1; // Good
                         if (x >= 1)
                         {
-                            NewHeights[res - x, z] = Mathf.PerlinNoise(x / RandomNoise , z / RandomNoise ) / 2;
+                            NewHeights[res - x, z] = Mathf.PerlinNoise(x / RandomNoise, z / RandomNoise) / 2;
                             float Height2 = NewHeights[res - x, z];
                             float Height3 = 0f;
+                            float PreviousHeights = NewHeights[res - x + 1, z];
                             if (x < EithRes || z > NegRes)
                             {
                                 Height3 = Mathf.SmoothStep(NewHeights[res - x + 1, z], Height2, 0.00001f);
                             }
                             if (x < EithRes || (z > NegRes || z < EithRes))
                             {
-                                Height3 = Mathf.SmoothStep(DownHeights[x,z], Height2, 0.00001f);
+                                Height3 = Mathf.SmoothStep(DownHeights[x, z], Height2, 0.00001f);
                             }
-                            else 
+                            else
                             {
-                                Height3 = Mathf.MoveTowards(DownHeights[x - 1, z], Height2, 0.00001f);
+                                Height3 = Mathf.MoveTowards(DownHeights[x, z], Mathf.DeltaAngle(Mathf.PerlinNoise(x / 100f, z / 100f) / 100f, PreviousHeights), 0.0005f);
                             }
-                            NewHeights[res - x, z] = Height3 ; // Good
+                            NewHeights[res - x, z] = Height3; // Good
                         }
                     }
                     if (RightHeights.Length > 6)
@@ -245,9 +247,10 @@ public static class TerrainExtensions
                         NewHeights[z, 0] = Height1; // Good
                         if (x >= 1)
                         {
-                            NewHeights[z, x] = Mathf.PerlinNoise(x / RandomNoise , z / RandomNoise ) / 2;
+                            NewHeights[z, x] = Mathf.PerlinNoise(x / RandomNoise, z / RandomNoise) / 2;
                             float Height2 = NewHeights[z, x];
                             float Height3 = 0f;
+                            float PreviousHeights = NewHeights[z, x - 1];
                             if (x < EithRes || z > NegRes)
                             {
                                 Height3 = Mathf.SmoothStep(NewHeights[z, x - 1], Height2, 0.00001f);
@@ -258,7 +261,7 @@ public static class TerrainExtensions
                             }
                             else
                             {
-                                Height3 = Mathf.MoveTowards(RightHeights[z, res - x + 1], Height2, 0.00001f);
+                                Height3 = Mathf.MoveTowards(RightHeights[z, res - x], Mathf.DeltaAngle(Mathf.PerlinNoise(x / 100f, z / 100f) / 100f,PreviousHeights), 0.0005f);
                             }
                             NewHeights[z, x] = Height3; // Good
                         }
@@ -269,20 +272,21 @@ public static class TerrainExtensions
                         NewHeights[z, res] = LeftHeights[z, 0]; // Good
                         if (x >= 1)
                         {
-                            NewHeights[z, res - x] = Mathf.PerlinNoise(x / RandomNoise, z / RandomNoise ) / 2;
+                            NewHeights[z, res - x] = Mathf.PerlinNoise(x / RandomNoise, z / RandomNoise) / 2;
                             float Height2 = NewHeights[z, res - x];
                             float Height3 = 0f;
+                            float PreviousHeights = NewHeights[z, res - x + 1];
                             if (z > NegRes || z < EithRes)
                             {
                                 Height3 = Mathf.SmoothStep(NewHeights[z, res - x + 1], Height2, 0.00001f);
                             }
                             if (x < EithRes || (z > NegRes || z < EithRes))
                             {
-                                Height3 = Mathf.SmoothStep(LeftHeights[z,x], Height2, 0.00001f);
+                                Height3 = Mathf.SmoothStep(LeftHeights[z, x], Height2, 0.00001f);
                             }
                             else
                             {
-                                Height3 = Mathf.MoveTowards(LeftHeights[z, x - 1], Height2, 0.00001f);
+                                Height3 = Mathf.MoveTowards(LeftHeights[z, x], Mathf.DeltaAngle(Mathf.PerlinNoise(x / 100f, z / 100f) / 100f, PreviousHeights), 0.05f);
                             }
                             NewHeights[z, res - x] = Height3; // Good
                         }
@@ -290,9 +294,9 @@ public static class TerrainExtensions
                 }
             }
         }
-        terrainData.SetHeights(0,0,NewHeights);
+        terrainData.SetHeights(0, 0, NewHeights);
     }
-    public static void GenerateAlphaMap(this TerrainData terrainData)
+public static void GenerateAlphaMap(this TerrainData terrainData)
     {
         int Res = (int)GameMaster.gameMaster.terrainSettings.AlphaMapResolution;
         float[,,] AlphaMap = new float[Res, Res, 3];
@@ -406,46 +410,45 @@ public static class TerrainExtensions
         switch (biome)
         {
             case TerrainBiome.Biomes.Planes:
-                for (int x = 1; x < Res - 1; x++)
+                // Decent
+                for (int x = 0; x < Res - 0; x++)
                 {
-                    for (int z = 1; z < Res - 1; z++)
+                    for (int z = 0; z < Res - 0; z++)
                     {
-                        float CurrentHeight = Heights[x, z];
-                        if (CurrentHeight <= 0.1f)
-                        {
-                            Heights[x, z] -= Mathf.PerlinNoise(Heights[x, z] + x / RandomNoise, Heights[x, z] + z / RandomNoise) / 40;
-                        }
-                        else if (CurrentHeight >= 0.2f && CurrentHeight <= 0.4f)
-                        {
-                            Heights[x, z] += Mathf.PerlinNoise(Heights[x,z] + x / RandomNoise, Heights[x,z] + z / RandomNoise) / 100;
-                        }
                     }
                 }
                 break;
             case TerrainBiome.Biomes.Hills:
                 break;
             case TerrainBiome.Biomes.Mountain:
-                for (int x = 1; x < Res - 1; x++)
+                // Decent
+                for (int x = 0; x < Res ; x++)
                 {
-                    for (int z = 1; z < Res - 1; z++)
+                    for (int z = 0; z < Res ; z++)
                     {
-                        float PreviousHeights = Heights[x - 1, z - 1];
-                        if ((x > Res / 8 && x < Res - (Res / 8)) && (z > Res / 8 && z < Res - (Res / 8)))
-                        {
-                            Heights[x, z] = Mathf.Lerp(Heights[x, z],PreviousHeights + Mathf.PerlinNoise(x / RandomNoise, z / RandomNoise) / 40f, PreviousHeights);
-                            if (Heights[x, z] <= 0.2f)
-                            {
-                                Heights[x, z] += Mathf.PerlinNoise(x / RandomNoise, z / RandomNoise) / 30;
-                            }
-                            else if (Heights[x, z] >= 0.4f && Heights[x, z] <= 0.6f)
-                            {
-                                Heights[x, z] += Mathf.PerlinNoise(x / RandomNoise, z / RandomNoise) / 20;
-                            }
-                            else
-                            {
-                                Heights[x, z] += Mathf.PerlinNoise(x / RandomNoise, z / RandomNoise) / 10;
-                            }
-                        }
+                        //float PreviousHeights = 0f;
+                        //if (z >= 1)
+                        //{
+                        //    PreviousHeights = Heights[x, z - 1];
+                        //}
+                        //else
+                        //{
+                        //    PreviousHeights = Heights[x, z];
+                        //}
+                        //float Slope = Mathf.PerlinNoise(PreviousHeights + x / RandomNoise, PreviousHeights + z / RandomNoise);
+                        ////Heights[x, z] += Slope / 4f;
+                        ////Heights[x, z] = Mathf.MoveTowards(PreviousHeights, Heights[x, z] + Slope / 4f, 0.001f);
+                        //Heights[x, z] = Mathf.MoveTowardsAngle(PreviousHeights, Heights[x,z], 0.1f);
+                        //if (PreviousHeights >= 0.9f && z >= 1)
+                        //{
+                        //    Heights[x, z] = Mathf.MoveTowards(PreviousHeights, Heights[x,z] - Slope / 4f, 0.001f);
+                        //    Heights[x, z - 1] = Mathf.SmoothStep(PreviousHeights,Heights[x,z],0.1f);
+                        //}
+                        //if (PreviousHeights <= 0.1f && z >= 1)
+                        //{
+                        //    Heights[x, z] = Mathf.MoveTowards(PreviousHeights, Heights[x,z] + Slope / 4f, 0.001f);
+                        //    Heights[x, z - 1] = Mathf.MoveTowards(PreviousHeights, Heights[x,z - 1] + Slope / 4f, 0.001f);
+                        //}
                     }
                 }
                 break;

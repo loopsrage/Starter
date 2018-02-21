@@ -139,7 +139,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b1aec10615a3f649aa2eade193a9fe2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  testMoveStructure: {fileID: 0}
   terrainSettings: {fileID: 0}
   ParticleSystemSelector: {fileID: 0}
   PlayerPosition: {x: 0, y: 0, z: 0}
@@ -200,11 +199,11 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 11400000, guid: 5e9e851c0e142814dac026a256ba2ac0, type: 2}
       propertyPath: m_RunSpeed
-      value: 100
+      value: 1000
       objectReference: {fileID: 0}
     - target: {fileID: 11400000, guid: 5e9e851c0e142814dac026a256ba2ac0, type: 2}
       propertyPath: m_JumpSpeed
-      value: 30
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 100000, guid: 5e9e851c0e142814dac026a256ba2ac0, type: 2}
       propertyPath: m_TagString
